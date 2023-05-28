@@ -9,7 +9,6 @@ import {
   ScrollRestoration,
 } from "@remix-run/react";
 
-import MainHeader from "~/components/navigation/MainHeader";
 import sharedStyles from "~/styles/shared.css";
 
 export const links = () => [
@@ -37,7 +36,6 @@ export default function App() {
         <Links />
       </head>
       <body>
-        <MainHeader />
         <Outlet />
         <ScrollRestoration />
         <Scripts />
