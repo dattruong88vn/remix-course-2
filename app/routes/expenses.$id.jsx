@@ -1,7 +1,9 @@
+import ExpenseForm from "~/components/expenses/ExpenseForm";
+
 function UndateExpensePage() {
   return (
     <main>
-      <h1>Expenses Detail Page</h1>
+      <ExpenseForm />
     </main>
   );
 }
