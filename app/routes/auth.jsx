@@ -1,3 +1,5 @@
+import authStyles from "~/styles/auth.css";
+
 function AuthPage() {
   return (
     <main>
@@ -7,3 +9,7 @@ function AuthPage() {
 }
 
 export default AuthPage;
+
+export function links() {
+  return [{ rel: "stylesheet", href: authStyles }];
+}
