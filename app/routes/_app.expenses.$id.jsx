@@ -30,7 +30,7 @@ export default UndateExpensePage;
 export async function action({ params, request }) {
   const expenseId = params.id;
 
-  if (request.method === "PATCH") {
+  if (request.method === "POST") {
     const formData = await request.formData();
     const expenseData = Object.fromEntries(formData);
 
