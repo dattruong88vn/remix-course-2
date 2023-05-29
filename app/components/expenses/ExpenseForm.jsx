@@ -3,11 +3,16 @@ import {
   Link,
   useActionData,
   // useSubmit
+  useNavigation,
 } from "@remix-run/react";
 
 function ExpenseForm() {
-  const today = new Date().toISOString().slice(0, 10); // yields something like 2023-09-10
+  const navigation = useNavigation();
   const validationErrors = useActionData();
+
+  const today = new Date().toISOString().slice(0, 10); // yields something like 2023-09-10
+
+  const isSubmiting = navigation.state !== "idle";
 
   // function submitHandler(event) {
   //   // validate on client
@@ -57,7 +62,9 @@ function ExpenseForm() {
       )}
 
       <div className="form-actions">
-        <button>Save Expense</button>
+        <button disabled={isSubmiting}>
+          {isSubmiting ? "Saving..." : "Save Expense"}
+        </button>
         <Link to="/expenses">Cancel</Link>
       </div>
     </Form>
