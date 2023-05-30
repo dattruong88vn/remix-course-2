@@ -69,7 +69,7 @@ export function ErrorBoundary() {
           <Error>
             <p>
               {error.data.message ||
-                "Something went wrong. Please try again later."}
+                "Something went wrong. Please try again later. Router"}
             </p>
             <p>
               Back to <Link to="/">safety</Link>.

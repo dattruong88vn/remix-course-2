@@ -22,6 +22,11 @@ function ExpenseForm() {
   ).data;
   const expenseData = expenses.find((expense) => expense.id === params.id);
 
+  if (params.id && !expenseData) {
+    // throw new Response();
+    return <p>Invalid expense id.</p>;
+  }
+
   const today = new Date().toISOString().slice(0, 10); // yields something like 2023-09-10
   const defaultValue = expenseData
     ? {
