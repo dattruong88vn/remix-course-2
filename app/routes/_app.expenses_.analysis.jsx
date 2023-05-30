@@ -1,28 +1,48 @@
-const DUMMY_EXPENSES = [
-  {
-    id: "e1",
-    title: "First Expense",
-    amount: 12.99,
-    date: new Date().valueOf(),
-  },
-  {
-    id: "e2",
-    title: "Second Expense",
-    amount: 16.99,
-    date: new Date().valueOf(),
-  },
-];
+import { json } from "@remix-run/node";
+import { useLoaderData, useRouteError } from "@remix-run/react";
 
 import ExpenseStatistics from "~/components/expenses/ExpenseStatistics";
 import Chart from "~/components/expenses/Chart";
+import { getExpenses } from "~/data/expenses.server";
+import Error from "~/components/util/Error";
 
 function ExpensesAnalysisPage() {
+  const expenses = useLoaderData();
+
   return (
     <main>
-      <Chart expenses={DUMMY_EXPENSES} />
-      <ExpenseStatistics expenses={DUMMY_EXPENSES} />
+      <Chart expenses={expenses} />
+      <ExpenseStatistics expenses={expenses} />
     </main>
   );
 }
 
 export default ExpensesAnalysisPage;
+
+export async function loader() {
+  const expenses = await getExpenses();
+
+  if (!expenses || expenses.length == 0) {
+    throw json(
+      { message: "Could not find expenses for analytics" },
+      { status: 404, statusText: "Expenses not found" }
+    );
+  }
+
+  return expenses;
+}
+
+export function ErrorBoundary() {
+  const error = useRouteError();
+
+  return (
+    <main>
+      <Error title={error.statusText}>
+        <p>
+          {error.data?.message ||
+            "Something went wrong. Please try again later."}
+        </p>
+      </Error>
+    </main>
+  );
+}
