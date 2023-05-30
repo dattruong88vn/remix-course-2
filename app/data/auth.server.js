@@ -13,6 +13,7 @@ const sessionStorage = createCookieSessionStorage({
         httpOnly: true,
     },
 });
+
 async function createUserSession(userId, redirectPath) {
     const session = await sessionStorage.getSession();
     session.set('userId', userId);
@@ -21,6 +22,23 @@ async function createUserSession(userId, redirectPath) {
             'Set-Cookie': await sessionStorage.commitSession(session),
         },
     });
+}
+
+
+
+export async function getUserFromSession(request) {
+    const session = await sessionStorage.getSession(request.headers.get('Cookie'));
+    const userId = session.get('userId');
+    return userId || null;
+}
+
+export async function detroyUserSession(request) {
+    const session = await sessionStorage.getSession(request.headers.get('Cookie'));
+    return redirect('/', {
+        headers: {
+            'Set-Cookie': await sessionStorage.destroySession(session) // destroy in BE and clear in FE
+        }
+    })
 }
 
 export async function signup({ email, password }) {
