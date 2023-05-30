@@ -21,3 +21,9 @@ export function links() {
 export async function loader({ request }) {
   return await getUserFromSession(request);
 }
+
+export function headers() {
+  return {
+    "Cache-Control": "max-age=3600",
+  };
+}

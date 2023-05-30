@@ -9,6 +9,7 @@ import {
   Scripts,
   ScrollRestoration,
   isRouteErrorResponse,
+  useMatches,
   useRouteError,
 } from "@remix-run/react";
 
@@ -21,6 +22,9 @@ export const links = () => [
 ];
 
 function Document({ title, children }) {
+  const matches = useMatches();
+  const disableJS = matches.some((match) => match.handle?.disableJS);
+
   return (
     <html lang="en">
       <head>
@@ -43,7 +47,7 @@ function Document({ title, children }) {
       <body>
         {children}
         <ScrollRestoration />
-        <Scripts />
+        {!disableJS && <Scripts />}
         <LiveReload />
       </body>
     </html>

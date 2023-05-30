@@ -46,4 +46,12 @@ export default function Index() {
   );
 }
 
-export function meta() {}
+export function headers() {
+  return {
+    "Cache-Control": "max-age=3600",
+  };
+}
+
+export const handle = {
+  disableJS: true,
+};
