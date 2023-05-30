@@ -1,22 +1,26 @@
 import { cssBundleHref } from "@remix-run/css-bundle";
 
 import {
+  Link,
   Links,
   LiveReload,
   Meta,
   Outlet,
   Scripts,
   ScrollRestoration,
+  isRouteErrorResponse,
+  useRouteError,
 } from "@remix-run/react";
 
 import sharedStyles from "~/styles/shared.css";
+import Error from "./components/util/Error";
 
 export const links = () => [
   ...(cssBundleHref ? [{ rel: "stylesheet", href: cssBundleHref }] : []),
   { rel: "stylesheet", href: sharedStyles },
 ];
 
-export default function App() {
+function Document({ title, children }) {
   return (
     <html lang="en">
       <head>
@@ -32,15 +36,62 @@ export default function App() {
           href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;700&display=swap"
           rel="stylesheet"
         />
+        <title>{title}</title>
         <Meta />
         <Links />
       </head>
       <body>
-        <Outlet />
+        {children}
         <ScrollRestoration />
         <Scripts />
         <LiveReload />
       </body>
     </html>
+  );
+}
+
+export default function App() {
+  return (
+    <Document>
+      <Outlet />
+    </Document>
+  );
+}
+
+export function ErrorBoundary() {
+  const error = useRouteError();
+
+  // when true, this is what used to go to `CatchBoundary`
+  if (isRouteErrorResponse(error)) {
+    return (
+      <Document>
+        <main>
+          <Error>
+            <p>
+              {error.data.message ||
+                "Something went wrong. Please try again later."}
+            </p>
+            <p>
+              Back to <Link to="/">safety</Link>.
+            </p>
+          </Error>
+        </main>
+      </Document>
+    );
+  }
+
+  return (
+    <Document>
+      <main>
+        <Error>
+          <p>
+            {error.message || "Something went wrong. Please try again later."}
+          </p>
+          <p>
+            Back to <Link to="/">safety</Link>.
+          </p>
+        </Error>
+      </main>
+    </Document>
   );
 }
