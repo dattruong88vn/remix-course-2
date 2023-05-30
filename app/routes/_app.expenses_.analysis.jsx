@@ -5,6 +5,7 @@ import ExpenseStatistics from "~/components/expenses/ExpenseStatistics";
 import Chart from "~/components/expenses/Chart";
 import { getExpenses } from "~/data/expenses.server";
 import Error from "~/components/util/Error";
+import { requireUserSession } from "~/data/auth.server";
 
 function ExpensesAnalysisPage() {
   const expenses = useLoaderData();
@@ -20,6 +21,8 @@ function ExpensesAnalysisPage() {
 export default ExpensesAnalysisPage;
 
 export async function loader() {
+  await requireUserSession(request);
+
   const expenses = await getExpenses();
 
   if (!expenses || expenses.length == 0) {

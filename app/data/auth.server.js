@@ -24,21 +24,30 @@ async function createUserSession(userId, redirectPath) {
     });
 }
 
-
-
 export async function getUserFromSession(request) {
-    const session = await sessionStorage.getSession(request.headers.get('Cookie'));
+    const session = await sessionStorage.getSession(
+        request.headers.get('Cookie')
+    );
     const userId = session.get('userId');
     return userId || null;
 }
 
 export async function detroyUserSession(request) {
-    const session = await sessionStorage.getSession(request.headers.get('Cookie'));
+    const session = await sessionStorage.getSession(
+        request.headers.get('Cookie')
+    );
     return redirect('/', {
         headers: {
             'Set-Cookie': await sessionStorage.destroySession(session) // destroy in BE and clear in FE
         }
     })
+}
+
+export async function requireUserSession(request) {
+    const userId = await getUserFromSession(request);
+    if (!userId) {
+        throw redirect('/auth?mode=login');
+    }
 }
 
 export async function signup({ email, password }) {
